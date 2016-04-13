@@ -1,4 +1,4 @@
-#include "CImg.h"
+#include "libs/CImg.h"
 #include <iostream>
 
 int main()
