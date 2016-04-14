@@ -15,7 +15,18 @@ int main(int argc, char * argv[])
 {
 
 	 CImg<double> image("images/lena.jpg");
-	 image.display();
+
+	 GaussianPyramid gaussianPyramid;// = new GaussianPyramid();
+
+	 double filter[5] = {1.0/16, 4.0/16, 6.0/16, 4.0/16, 1.0/16};
+	 gaussianPyramid.generateFilter(filter);
+	 
+	 // image.display();
+
+	 CImg<double> reducedImage = gaussianPyramid.reduce(image);
+
+	 reducedImage.display();
+
 	//  const unsigned char red[] = { 255,0,0 }, green[] = { 0,255,0 }, blue[] = { 0,0,255 };
 	//  image.blur(2.5);
  //     CImgDisplay main_disp(image,"Click a point"), draw_disp(visu,"Intensity profile");
@@ -33,18 +44,18 @@ int main(int argc, char * argv[])
 	// if (argc == 2 && argv[1] == "--help") {
 	// 	std::cout << "Voce precisa passar duas imagens" << std::endl;
 	// }
-	if (argc == 3) {
-		// User passed 2 images and no binary mask
-	}
-	else if (argc == 4) {
-		// User passed 2 imagens and binary mask
-	}
-	else {
-		// Does nothing. Print error
-		return -1;
-	}
-	std::cout << argc << std::endl;
+	// if (argc == 3) {
+	// 	// User passed 2 images and no binary mask
+	// }
+	// else if (argc == 4) {
+	// 	// User passed 2 imagens and binary mask
+	// }
+	// else {
+	// 	// Does nothing. Print error
+	// 	return -1;
+	// }
+	// std::cout << argc << std::endl;
 
-	std::cout << "Hello World" << std::endl;
+	// std::cout << "Hello World" << std::endl;
 	return 0;
 }
