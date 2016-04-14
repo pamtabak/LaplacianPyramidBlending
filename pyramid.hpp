@@ -15,18 +15,27 @@ public:
 	CImg<double> reduce (CImg<double> image) {
 		// Suavizar e reduzir Imagem pela metade de forma alternada linhas e colunas
 		
-		CImg<double> reducedImage(image.width()/2, image.height()/2);
+		int width  = image.width();
+		int height = image.height();
 
-		for (int x = 0; x < image.width(); x+=2) {
-			for (int y = 0; y < image.height(); y+=2) {
-				for (int canal = 0; canal < image.spectrum(); canal++){
+		CImg<double> reducedImage(width/2, height/2);
+
+		// Iterating over each pixel of the image, skipping columns and lines that are odd
+		for (int x = 0; x < width; x+=2) {
+			for (int y = 0; y < height; y+=2) {
+				// Iterating over each canal
+				for (int canal = 0; canal < image.spectrum(); canal++) {
+					// multiplying matrices
 					reducedImage(x,y,0,canal) = 0.0;
-					// multiplicacao de matrizes
-					for (int i = -2; i <= 2; i++){
+					for (int i = -2; i <= 2; i++) {
 						for (int j = -2; j <= 2; j++) {
-							// TRATAR EXCECOES (BORDAS) -- ESPELHAR IMAGEM PARA FORA
-							// if (x < 2) or if (y < 2) or if (x > image.width()/2)
-							reducedImage(x,y,0,canal) += image(x + i, y + j,0,canal)*filter2d[i+2][j+2];
+							// Making exceptions for edges. We need to mirror the image
+							int newValueOfX = ((x + i) < 0) ?  (-x - i - 1) : x + i;
+							newValueOfX = (newValueOfX >= width) ? ((2 * width) - x - i - 1) : newValueOfX;
+							int newValueOfY = ((y + j) < 0) ? (-y - j - 1) : y + j;
+							newValueOfY = (newValueOfY >= height) ? (PREENCHER) : newValueOfY;
+
+							reducedImage(x,y,0,canal) += image(newValueOfX, newValueOfY,0,canal)*filter2d[i+2][j+2];
 						}
 					}
 				}

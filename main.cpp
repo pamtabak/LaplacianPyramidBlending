@@ -13,10 +13,8 @@ using namespace cimg_library;
 
 int main(int argc, char * argv[])
 {
-	// CImg<unsigned char> image("lena.jpg"), visu(500,400,1,3,0);
-	// image.display();
 
-	 CImg<double> image("images/lena.jpg"), visu(500,400,1,3,0);
+	 CImg<double> image("images/lena.jpg");
 	 image.display();
 	//  const unsigned char red[] = { 255,0,0 }, green[] = { 0,255,0 }, blue[] = { 0,0,255 };
 	//  image.blur(2.5);
