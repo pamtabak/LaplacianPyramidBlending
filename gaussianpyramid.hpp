@@ -15,7 +15,6 @@ public:
 
 	CImg<double> reduce (CImg<double> image) {
 		// Suavizar e reduzir Imagem pela metade de forma alternada linhas e colunas
-		
 		int width       = image.width();
 		int height      = image.height();
 		int imageCanals = image.spectrum();
@@ -41,7 +40,6 @@ public:
 						}	
 					}
 				}
-				
 			}
 		}
 

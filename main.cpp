@@ -2,30 +2,50 @@
 
 #include "libs/CImg.h"
 #include <iostream>
-#include "pyramid.hpp"
+#include "gaussianpyramid.hpp"
 
 #define cimg_use_magick
 
 using namespace cimg_library;
 
 // In order to make it run
-// g++ main.cpp -o main -L/opt/X11/lib -lX11 -pthread 
+// g++ main.cpp -o main.out -L/opt/X11/lib -lX11 -pthread 
 
 int main(int argc, char * argv[])
 {
+	int pyramidSize = 3;
 
 	 CImg<double> image("images/lena.jpg");
 
-	 GaussianPyramid gaussianPyramid;// = new GaussianPyramid();
+
+	 // Gaussian pyramid
+	 GaussianPyramid gPyramid; //= new GaussianPyramid();
 
 	 double filter[5] = {1.0/16, 4.0/16, 6.0/16, 4.0/16, 1.0/16};
-	 gaussianPyramid.generateFilter(filter);
+	 gPyramid.generateFilter(filter);
 	 
-	 // image.display();
+	 CImg<double> * gaussianPyramid = new CImg<double>[pyramidSize];
 
-	 CImg<double> reducedImage = gaussianPyramid.reduce(image);
+	 CImg<double> reducedImage  = image;
+	 for (int p = 0; p < pyramidSize; p++)
+	 {
+	 	gaussianPyramid[p] = gPyramid.reduce(reducedImage);
+	 	reducedImage = gaussianPyramid[p];
+	 }
 
-	 reducedImage.display();
+	 // CImg<double> reducedImage1 = gPyramid.reduce(reducedImage);
+	 // CImg<double> reducedImage2 = gPyramid.reduce(reducedImage1);
+		 
+
+	 // for (int p = 0; p < pyramidSize; p++) {
+		// reducedImage = gPyramid.reduce(reducedImage);
+		// gaussianPyramid[p] = reducedImage;
+	 // }
+
+	 gaussianPyramid[1].display();
+
+	 delete gaussianPyramid;
+	 // delete gPyramid;
 
 	//  const unsigned char red[] = { 255,0,0 }, green[] = { 0,255,0 }, blue[] = { 0,0,255 };
 	//  image.blur(2.5);
