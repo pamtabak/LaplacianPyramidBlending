@@ -20,7 +20,7 @@ int main(int argc, char * argv[])
 	// std::cout << "Digite o nome das imagens, separado por espaco, que estao na pasta images." << std::endl;
 	// std::cin >> images;
 
-	int pyramidSize = 4;
+	int pyramidSize = 6;
 
 	CImg<double> image("images/lena.jpg");
 
@@ -39,18 +39,30 @@ int main(int argc, char * argv[])
 	 	reducedImage = gaussianPyramid[p];
 	}
 
-	// gaussianPyramid[1].display();
-
 	// Laplacian Pyramid
 	LaplacianPyramid lPyramid;
 
-	double laplacianFilter[5] = {1.0/8, 4.0/8, 6.0/8, 4.0/8, 1.0/8};
+	double laplacianFilter[5] = {0.5/8, 2.0/8, 3.0/8, 2.0/8, 0.5/8};
 	lPyramid.generateFilter(laplacianFilter);
 
-	CImg<double> a = lPyramid.expand(gaussianPyramid[0]);
-	a.display();
+	CImg<double> * laplacianPyramid = new CImg<double>[pyramidSize];
+
+	for (int p = 1; p < pyramidSize; p++)
+	{
+		laplacianPyramid[p - 1] = gaussianPyramid[p - 1] - lPyramid.expand(gaussianPyramid[p]);
+	}
+
+	/* The laplacian pyramid has one level less than the gaussian pyramid
+	so we repeat the last level of the gaussian pyramid */
+	laplacianPyramid[pyramidSize - 1] = gaussianPyramid[pyramidSize - 1] - lPyramid.expand(gaussianPyramid[pyramidSize - 1]);
+
+	// Collapsing
+	// CImg<double> collapsedImage = laplacianPyramid[0] + lPyramid.expand(gaussianPyramid[1]);
+	
+	collapsedImage.display();
 
 	delete [] gaussianPyramid;
+	delete [] laplacianPyramid;
 
 	return 0;
 }
