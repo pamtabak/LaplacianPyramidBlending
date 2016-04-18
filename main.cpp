@@ -13,8 +13,11 @@ using namespace cimg_library;
 
 /* CImg pega os valores de 0 a 255. precisa dividir para pegar de 0 a 1 */
 
-int main(int argc, char * argv[])
-{
+CImg<double> blend() {
+
+}
+
+int main(int argc, char * argv[]) {
 	// Interation with user
 	// std::string images;
 	// std::cout << "Digite o nome das imagens, separado por espaco, que estao na pasta images." << std::endl;
@@ -57,9 +60,8 @@ int main(int argc, char * argv[])
 	laplacianPyramid[pyramidSize - 1] = gaussianPyramid[pyramidSize - 1] - lPyramid.expand(gaussianPyramid[pyramidSize - 1]);
 
 	// Collapsing
-	// CImg<double> collapsedImage = laplacianPyramid[0] + lPyramid.expand(gaussianPyramid[1]);
-	
-	collapsedImage.display();
+	// CImg<double> collapsedImage = laplacianPyramid[0] + lPyramid.expand(gaussianPyramid[1]);	
+	// collapsedImage.display();
 
 	delete [] gaussianPyramid;
 	delete [] laplacianPyramid;
