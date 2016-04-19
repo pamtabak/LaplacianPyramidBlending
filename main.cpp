@@ -36,25 +36,34 @@ int main(int argc, char * argv[]) {
 	// Interation with user
 	std::string imagesString;
 	std::string maskString;
-	std::cout << "Digite o nome (com a extensao) das imagens, separado por espaco, que estao na pasta images." << std::endl;
-	std::cin >> imagesString;
-	std::cout << "Digite o nome (com a extensao) da mascara contida na pasta images." << std::endl;
-	std::cin >> maskString;
+	if(argc == 2)
+	{
+		std::string arg1(argv[1]);
+		imagesString = "images/" + arg1;
+	}
+	
+	if (argc == 3)
+	{
+		std::string arg2(argv[2]);
+		imagesString = " images/" + arg2;
+	}
+
+	if (argc == 4)
+	{
+		std::string arg3(argv[3]);
+		maskString = "images/" + arg3;
+	}
+	else
+	{
+		maskString = "images/default.png";
+	}
 
 	std::vector<std::string> images = split(imagesString, ' ');
-	for (int i = 0; i < images.size(); i++) {
-		images[i] = "images/" + images[i];
-	}
-	maskString = "images/" + maskString;
 	
+	std::cout << imagesString << std::endl;
+
 	const int pyramidSize = 6;
 	
-	// CImg<double> ** pyramidsG = new CImg<double>*[images.size()];
-	// CImg<double> ** pyramidsP = new CImg<double>*[images.size()];
-	// for (int i = 0; i < images.size(); i++) {
-	// 	pyramidsG[i] = new CImg<double>[pyramidSize];
-	// 	pyramidsP[i] = new CImg<double>[pyramidSize];
-	// }
 
 	CImg<double> ** pyramidsG = (CImg<double> **) malloc(sizeof(*pyramidsG) * images.size());
 	CImg<double> ** pyramidsP = (CImg<double> **) malloc(sizeof(*pyramidsP) * images.size());
