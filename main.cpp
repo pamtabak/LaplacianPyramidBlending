@@ -111,6 +111,8 @@ int main(int argc, char * argv[]) {
 		// collapsedImage.display();
 	}
 
+	// Blending images
+
 	for (int i = 0; i < images.size(); i++) {
 		delete [] pyramidsG[i];
 		delete [] pyramidsP[i];
