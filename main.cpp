@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
 
 	std::vector<std::string> images = split(imagesString, ' ');
 
-	const int pyramidSize = 6;
+	const int pyramidSize = 7;
 	
 	CImg<double> ** pyramidsG = new CImg<double>*[images.size()];
  	CImg<double> ** pyramidsP = new CImg<double>*[images.size()];
@@ -146,7 +146,7 @@ int main(int argc, char * argv[]) {
 		for (int canal = 0; canal < pyramidsG[0][i].spectrum(); canal++){
 			for (int x = 0; x < pyramidsG[0][i].width(); x++) {
 				for (int y = 0; y < pyramidsG[0][i].height(); y++) {
-					lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y,0,0)/255.0) * (pyramidsP[0][i](x,y,0,canal)/255.0)) + (1.0 - (maskGaussianPyramid[i](x,y,0,0)/255.0))*(pyramidsP[1][i](x,y,0,canal)/255.0);
+					lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y,0,0)/255.0) * (pyramidsP[0][i](x,y,0,canal))) + ((1.0 - (maskGaussianPyramid[i](x,y,0,0)/255.0))*(pyramidsP[1][i](x,y,0,canal)));
 					// lsImageGaussian(x,y,0,canal)  = ((maskGaussianPyramid[i](x,y,0,0)/255) * (pyramidsG[0][i](x,y,0,canal)/255)) + (1 - (maskGaussianPyramid[i](x,y,0,0)/255))*(pyramidsG[1][i](x,y,0,canal)/255);
 				}
 			}
@@ -162,13 +162,13 @@ int main(int argc, char * argv[]) {
 	// double laplacianFilter[5] = {1.0/16, 4.0/16, 6.0/16, 4.0/16, 1.0/16};
 	lPyramid.generateFilter(laplacianFilter);
 	
-	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + lPyramid.expand(newLaplacianPyramid[pyramidSize - 1]);;
+	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + lPyramid.expand(newLaplacianPyramid[pyramidSize - 1]);
 	for (int i = pyramidSize - 3; i >= 0; i--){
 		collapsedImage = newLaplacianPyramid[i] + lPyramid.expand(collapsedImage);
 	}
 
-	collapsedImage.display();
-	collapsedImage.normalize(0, 255);
+	// collapsedImage.display();
+	// collapsedImage.normalize(0, 255);
 	// collapsedImage.save("result.png");
 
 // 	imagina q vc tem 4 camadas:

@@ -19,17 +19,20 @@ public:
 		int height      = image.height();
 		int imageCanals = image.spectrum();
 
+		int modifiedWidth = width;
+		int modifiedHeight = height;
+
 		if (width % 2 != 0){
-			width++;
+			modifiedWidth++;
 		}
 		if (height % 2 != 0){
-			height++;
+			modifiedHeight++;
 		}
 
-		CImg<double> reducedImage(width/2, height/2, 1, imageCanals,0);
+		CImg<double> reducedImage(modifiedWidth/2, modifiedHeight/2, 1, imageCanals,0);
 
-		for (int x = 0; x < width; x+=2) {
-			for (int y = 0; y < height; y+=2) {
+		for (int x = 0; x < modifiedWidth; x+=2) {
+			for (int y = 0; y < modifiedHeight; y+=2) {
 				// Iterating over each canal
 				for (int canal = 0; canal < imageCanals; canal++) {
 					// multiplying matrices
