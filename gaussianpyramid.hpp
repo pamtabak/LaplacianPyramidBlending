@@ -19,7 +19,7 @@ public:
 		int height      = image.height();
 		int imageCanals = image.spectrum();
 
-		int modifiedWidth = width;
+		int modifiedWidth  = width;
 		int modifiedHeight = height;
 
 		if (width % 2 != 0){

@@ -17,8 +17,6 @@ public:
 		int height      = image.height();
 		int imageCanals = image.spectrum();
 
-		// 68, 49, 3
-		// 136, 98, 3
 		CImg<double> expandedImage(2 * width, 2 * height, 1, imageCanals,0);
 		
 		for (int canal = 0; canal < imageCanals; canal++) {
@@ -26,14 +24,11 @@ public:
 			for (int y = 0; y < 2*height; y+=2) {
 				for (int x = 0; x < 2*width; x+=2) {
 					expandedImage(x,y,0,canal) = image(x/2,y/2,0,canal);
-					// expandedImage(x,y,0,canal) = 120.0;
-					// std::cout << image(x/2,y/2,0,canal) << std::endl;
-					// expandedImage(x+1, y+1,0,canal) = 200.0;
 				}
 			}
 		}
 
-		CImg<double> filteredImage(2 * width, 2 * height, 1, imageCanals);
+		CImg<double> filteredImage(2 * width, 2 * height, 1, imageCanals,0);
 
 		for (int canal = 0; canal < imageCanals; canal++) {
 			for (int y = 0; y < 2 * height; y++){
@@ -54,9 +49,7 @@ public:
 			}
 		}
 
-		// expandedImage.save("TESTE.png");
 		return filteredImage;
-		// return expandedImage;
 	}
 
 	void generateFilter (double filter[5]) {
