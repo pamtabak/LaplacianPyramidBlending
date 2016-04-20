@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
 
 	std::vector<std::string> images = split(imagesString, ' ');
 
-	const int pyramidSize = 4;
+	const int pyramidSize = 6;
 	
 	CImg<double> ** pyramidsG = new CImg<double>*[images.size()];
  	CImg<double> ** pyramidsP = new CImg<double>*[images.size()];
@@ -67,19 +67,11 @@ int main(int argc, char * argv[]) {
  		pyramidsP[i] = new CImg<double>[pyramidSize];
  	}
 
-	// CImg<double> ** pyramidsG = (CImg<double> **) malloc(sizeof(*pyramidsG) * images.size());
-	// CImg<double> ** pyramidsP = (CImg<double> **) malloc(sizeof(*pyramidsP) * images.size());
-	// for (int i = 0; i < images.size(); i++) {
-	// 	pyramidsG[i] = (CImg<double> *) malloc(sizeof(*pyramidsG[i]) * pyramidSize);
-	// 	pyramidsP[i] = (CImg<double> *) malloc(sizeof(*pyramidsP[i]) * pyramidSize);
-	// }
-
 	// Creating Images Laplacian Pyramids
 	for (int i = 0; i < images.size(); i++) {
 		const char *const imagePath = images[i].c_str();
 		
 		CImg<double> image(imagePath);
-		// image.display();
 
 		// Gaussian pyramid
 		GaussianPyramid gPyramid;
@@ -93,8 +85,6 @@ int main(int argc, char * argv[]) {
 			pyramidsG[i][p] = gPyramid.reduce(reducedImage);
 			reducedImage = pyramidsG[i][p];
 		}
-
-		// pyramidsG[i][pyramidSize-1].display();
 
 		// Laplacian Pyramid
 		LaplacianPyramid lPyramid;
@@ -110,7 +100,16 @@ int main(int argc, char * argv[]) {
 		so we repeat the last level of the gaussian pyramid */
 		pyramidsP[i][pyramidSize - 1] = pyramidsG[i][pyramidSize - 1];
 
-		// // Collapse Image
+		// pyramidsG[i][2].display();
+		// pyramidsG[i][3].display();
+		// pyramidsG[i][3].display();
+		// CImg<double> test = lPyramid.expand(pyramidsG[i][1]);
+		// test.display();
+		// lPyramid.expand(reducedImage).display();
+		// pyramidsP[i][0].display();
+		//lPyramid.expand(pyramidsP[i][pyramidSize - 1]).display();
+
+		// Collapse Image
 		// CImg<double> collapseImage = pyramidsP[i][pyramidSize - 2] + lPyramid.expand(pyramidsP[i][pyramidSize - 1]);
 		// for (int a = pyramidSize - 3; a >= 0; a--){
 		// 	collapseImage = pyramidsP[i][a] + lPyramid.expand(collapseImage);
@@ -135,41 +134,41 @@ int main(int argc, char * argv[]) {
 		maskGaussianPyramid.push_back(maskReduced);
 		reducedImage = maskReduced;
 	}
-	maskGaussianPyramid[2].display();
+	// maskGaussianPyramid[3].display();
 
 
-	// // Blending images
-	// std::vector<CImg<double> > newLaplacianPyramid;
-	// // std::vector<CImg<double> > newGaussianPyramid;
-	// for (int i = 0; i < pyramidSize; i++) {
-	// 	CImg<double> lsImageLaplacian(pyramidsG[0][i].width(), pyramidsG[0][i].height(),1,pyramidsG[0][i].spectrum());
-	// 	// CImg<double> lsImageGaussian(pyramidsG[0][i].width(), pyramidsG[0][i].height(),1,pyramidsG[0][i].spectrum());
-	// 	for (int canal = 0; canal < pyramidsG[0][i].spectrum(); canal++){
-	// 		for (int x = 0; x < pyramidsG[0][i].width(); x++) {
-	// 			for (int y = 0; y < pyramidsG[0][i].height(); y++) {
-	// 				lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y,0,0)/255.0) * (pyramidsP[0][i](x,y,0,canal)/255.0)) + (1.0 - (maskGaussianPyramid[i](x,y,0,0)/255.0))*(pyramidsP[1][i](x,y,0,canal)/255.0);
-	// 				// lsImageGaussian(x,y,0,canal)  = ((maskGaussianPyramid[i](x,y,0,0)/255) * (pyramidsG[0][i](x,y,0,canal)/255)) + (1 - (maskGaussianPyramid[i](x,y,0,0)/255))*(pyramidsG[1][i](x,y,0,canal)/255);
-	// 			}
-	// 		}
-	// 	}
-	// 	newLaplacianPyramid.push_back(lsImageLaplacian);
-	// 	// newGaussianPyramid.push_back(lsImageGaussian);
-	// }
+	// Blending images
+	std::vector<CImg<double> > newLaplacianPyramid;
+	// std::vector<CImg<double> > newGaussianPyramid;
+	for (int i = 0; i < pyramidSize; i++) {
+		CImg<double> lsImageLaplacian(pyramidsG[0][i].width(), pyramidsG[0][i].height(),1,pyramidsG[0][i].spectrum(),0);
+		// CImg<double> lsImageGaussian(pyramidsG[0][i].width(), pyramidsG[0][i].height(),1,pyramidsG[0][i].spectrum());
+		for (int canal = 0; canal < pyramidsG[0][i].spectrum(); canal++){
+			for (int x = 0; x < pyramidsG[0][i].width(); x++) {
+				for (int y = 0; y < pyramidsG[0][i].height(); y++) {
+					lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y,0,0)/255.0) * (pyramidsP[0][i](x,y,0,canal)/255.0)) + (1.0 - (maskGaussianPyramid[i](x,y,0,0)/255.0))*(pyramidsP[1][i](x,y,0,canal)/255.0);
+					// lsImageGaussian(x,y,0,canal)  = ((maskGaussianPyramid[i](x,y,0,0)/255) * (pyramidsG[0][i](x,y,0,canal)/255)) + (1 - (maskGaussianPyramid[i](x,y,0,0)/255))*(pyramidsG[1][i](x,y,0,canal)/255);
+				}
+			}
+		}
+		newLaplacianPyramid.push_back(lsImageLaplacian);
+		// newGaussianPyramid.push_back(lsImageGaussian);
+	}
 
-	// // // Collapsing
-	// LaplacianPyramid lPyramid;
+	// // Collapsing
+	LaplacianPyramid lPyramid;
 
-	// double laplacianFilter[5] = {0.5/8, 2.0/8, 3.0/8, 2.0/8, 0.5/8};
-	// // double laplacianFilter[5] = {1.0/16, 4.0/16, 6.0/16, 4.0/16, 1.0/16};
-	// lPyramid.generateFilter(laplacianFilter);
+	double laplacianFilter[5] = {0.5/8, 2.0/8, 3.0/8, 2.0/8, 0.5/8};
+	// double laplacianFilter[5] = {1.0/16, 4.0/16, 6.0/16, 4.0/16, 1.0/16};
+	lPyramid.generateFilter(laplacianFilter);
 	
-	// CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + lPyramid.expand(newLaplacianPyramid[pyramidSize - 1]);;
-	// for (int i = pyramidSize - 3; i >= 0; i--){
-	// 	collapsedImage = newLaplacianPyramid[i] + lPyramid.expand(collapsedImage);
-	// }
+	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + lPyramid.expand(newLaplacianPyramid[pyramidSize - 1]);;
+	for (int i = pyramidSize - 3; i >= 0; i--){
+		collapsedImage = newLaplacianPyramid[i] + lPyramid.expand(collapsedImage);
+	}
 
-	// collapsedImage.display();
-	// collapsedImage.normalize(0, 255);
+	collapsedImage.display();
+	collapsedImage.normalize(0, 255);
 	// collapsedImage.save("result.png");
 
 // 	imagina q vc tem 4 camadas:
