@@ -17,7 +17,7 @@ public:
 	    int width       = image.width();
 	    int height      = image.height();
 	    int imageCanals = image.spectrum();
-	 
+	 	
 	    int newWidth = width/2;
 	    int newHeight = height/2;
 	 

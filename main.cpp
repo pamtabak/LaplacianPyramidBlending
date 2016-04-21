@@ -60,22 +60,26 @@ int main(int argc, char * argv[]) {
 			gaussianPyramids.push_back(imageGenerated);
 			reducedImage = imageGenerated;
 		}
-		
+
 		for (int p = 1; p < pyramidSize; p++) { 
-			laplacianPyramids.push_back(gaussianPyramids[p - 1] - 4*lPyramid.expand(gaussianPyramids[p]));
+			int w = (gaussianPyramids[p - 1].width() - 2*gaussianPyramids[p].width());
+			int h = (gaussianPyramids[p - 1].height() - 2*gaussianPyramids[p].height());
+			laplacianPyramids.push_back(gaussianPyramids[p - 1] - 4*lPyramid.expand(gaussianPyramids[p], w, h));
 		}
 		laplacianPyramids.push_back(gaussianPyramids[pyramidSize - 1]);
 
 		pyramidsG.push_back(gaussianPyramids);
 		pyramidsP.push_back(laplacianPyramids);
 
-
-		// Collapse Image
-		// CImg<double> collapseImage = laplacianPyramids[pyramidSize - 2] + 4*lPyramid.expand(laplacianPyramids[pyramidSize - 1]);
+		// // Collapsing Original Image
+		// int w = (gaussianPyramids[pyramidSize - 2].width() - 2*gaussianPyramids[pyramidSize - 1].width());
+		// int h = (gaussianPyramids[pyramidSize - 2].height() - 2*gaussianPyramids[pyramidSize - 1].height());
+		// CImg<double> collapseImage = laplacianPyramids[pyramidSize - 2] + 4*lPyramid.expand(laplacianPyramids[pyramidSize - 1],w,h);
 		// for (int a = pyramidSize - 3; a >= 0; a--){
-		// 	collapseImage = laplacianPyramids[a] + 4*lPyramid.expand(collapseImage);
+		// 	w = (laplacianPyramids[a].width() - 2*collapseImage.width());
+		// 	h = (laplacianPyramids[a].height() - 2*collapseImage.height());
+		// 	collapseImage = laplacianPyramids[a] + 4*lPyramid.expand(collapseImage,w,h);
 		// }
-		// collapseImage.display();
 	}
 
 	// Creating Mask Gaussian Pyramid
@@ -106,14 +110,16 @@ int main(int argc, char * argv[]) {
 		newLaplacianPyramid.push_back(lsImageLaplacian);
 	}	
 
-	// newLaplacianPyramid[1].display();
-	// (4*lPyramid.expand(newLaplacianPyramid[pyramidSize - 1])).display();
-	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + 4*lPyramid.expand(newLaplacianPyramid[pyramidSize - 1]);
+	int w = (newLaplacianPyramid[pyramidSize - 2].width() - 2*newLaplacianPyramid[pyramidSize - 1].width());
+	int h = (newLaplacianPyramid[pyramidSize - 2].height() - 2*newLaplacianPyramid[pyramidSize - 1].height());
+	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + 4*lPyramid.expand(newLaplacianPyramid[pyramidSize - 1],w,h);
 	for (int i = pyramidSize - 3; i >= 0; i--){
-		collapsedImage = newLaplacianPyramid[i] + 4*lPyramid.expand(collapsedImage);
+		w = (newLaplacianPyramid[i].width() - 2*newLaplacianPyramid[i + 1].width());
+		h = (newLaplacianPyramid[i].height() - 2*newLaplacianPyramid[i + 1].height());
+		collapsedImage = newLaplacianPyramid[i] + 4*lPyramid.expand(collapsedImage,w,h);
 	}
 	collapsedImage.display();
-	
 	collapsedImage.normalize(0,255).save("result.png");
+	
 	return 0;
 }
