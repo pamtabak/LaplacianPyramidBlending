@@ -80,6 +80,7 @@ int main(int argc, char * argv[]) {
 		// 	h = (laplacianPyramids[a].height() - 2*collapseImage.height());
 		// 	collapseImage = laplacianPyramids[a] + 4*lPyramid.expand(collapseImage,w,h);
 		// }
+		// collapseImage.display();
 	}
 
 	// Creating Mask Gaussian Pyramid
@@ -102,8 +103,8 @@ int main(int argc, char * argv[]) {
 		for (int canal = 0; canal < pyramidsP[0][i].spectrum(); canal++){
 			for (int x = 0; x < pyramidsP[0][i].width(); x++) {
 				for (int y = 0; y < pyramidsP[0][i].height(); y++) {
-					lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y)/255) * (pyramidsP[0][i](x,y,0,canal))) 
-					+ ((1 - (maskGaussianPyramid[i](x,y)/255))*(pyramidsP[1][i](x,y,0,canal)));
+					lsImageLaplacian(x,y,0,canal) = ((maskGaussianPyramid[i](x,y,0,0)/255) * (pyramidsP[0][i](x,y,0,canal))) 
+					+ ((1 - (maskGaussianPyramid[i](x,y,0,0)/255))*(pyramidsP[1][i](x,y,0,canal)));
 				}
 			}
 		}
@@ -114,11 +115,14 @@ int main(int argc, char * argv[]) {
 	int h = (newLaplacianPyramid[pyramidSize - 2].height() - 2*newLaplacianPyramid[pyramidSize - 1].height());
 	CImg<double> collapsedImage = newLaplacianPyramid[pyramidSize - 2] + 4*lPyramid.expand(newLaplacianPyramid[pyramidSize - 1],w,h);
 	for (int i = pyramidSize - 3; i >= 0; i--){
-		w = (newLaplacianPyramid[i].width() - 2*newLaplacianPyramid[i + 1].width());
-		h = (newLaplacianPyramid[i].height() - 2*newLaplacianPyramid[i + 1].height());
+		w = (newLaplacianPyramid[i].width() - 2*collapsedImage.width());
+		h = (newLaplacianPyramid[i].height() - 2*collapsedImage.height());
 		collapsedImage = newLaplacianPyramid[i] + 4*lPyramid.expand(collapsedImage,w,h);
 	}
-	collapsedImage.display();
+
+	// collapsedImage = lPyramid.filterImage(collapsedImage);;
+	collapsedImage.blur(0.7).display();
+	// collapsedImage.display();
 	collapsedImage.normalize(0,255).save("result.png");
 	
 	return 0;

@@ -29,11 +29,10 @@ public:
 	                reducedImage(x,y,0,canal) = 0.0;
 	                for (int i = -2; i <= 2; i++) {
 	                    for (int j = -2; j <= 2; j++) {
-	                        int newValueOfX = ((x*2 + i) < 0) ? (-x*2 - i - 1) : x*2 + i;
+	                        int newValueOfX = ((x*2 + i) < 0) ? ((-x*2) - i - 1) : x*2 + i;
 	                        newValueOfX = (newValueOfX >= width) ? ((2 * width) - x*2 - i - 1) : newValueOfX;
-	                        int newValueOfY = ((y*2 + j) < 0) ? (-y*2 - j - 1) : y*2 + j;
+	                        int newValueOfY = ((y*2 + j) < 0) ? ((-y*2) - j - 1) : y*2 + j;
 	                        newValueOfY = (newValueOfY >= height) ? ((2 * height) - y*2 - j - 1) : newValueOfY;
-	                        
 	                        
 	                        reducedImage(x,y,0,canal) += image(newValueOfX, newValueOfY,0,canal) * filter2d[i+2][j+2];
 	                    }  
