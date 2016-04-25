@@ -34,7 +34,7 @@ int main(int argc, char * argv[]) {
 	}
 	else { maskString = "images/default.png";}
 
-	const int pyramidSize = 4;
+	const int pyramidSize = 3;
 
  	std::vector<std::vector<CImg <double> > > pyramidsP;
  	std::vector<std::vector<CImg <double> > > pyramidsG;
