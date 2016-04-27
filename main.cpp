@@ -121,8 +121,8 @@ int main(int argc, char * argv[]) {
 	}
 
 	// collapsedImage = lPyramid.filterImage(collapsedImage);;
-	collapsedImage.blur(0.7).display();
-	// collapsedImage.display();
+	// collapsedImage.blur(0.7).display();
+	collapsedImage.display();
 	collapsedImage.normalize(0,255).save("result.png");
 	
 	return 0;
